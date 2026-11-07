@@ -1,0 +1,34 @@
+[
+ {
+  "id": "F1",
+  "file": "packages/drizzle-adapter/src/drizzle-adapter.ts",
+  "line": 190,
+  "severity": "medium",
+  "claim": "getRelationKeysByModel never assigns the computed value back to relationKeysByModel, so it is never memoized and buildRelationKeysByModel(db._?.schema) is recomputed on every joined query instead of once.",
+  "evidence": "relationKeysByModel ?? buildRelationKeysByModel(db._?.schema);"
+ },
+ {
+  "id": "F2",
+  "file": "packages/drizzle-adapter/src/relations-v2/index.ts",
+  "line": 280,
+  "severity": "high",
+  "claim": "The lazy relation-keys getter reads db._?.schema instead of db._?.relations (what the removed line and the module's own v2 tests expect), so relation keys are built from the wrong/absent metadata and joins break for the relations-v2 adapter.",
+  "evidence": "(relationKeysByModel ??= buildRelationKeysByModel(db._?.schema));"
+ },
+ {
+  "id": "F3",
+  "file": "packages/drizzle-adapter/src/relations-v2/index.ts",
+  "line": 280,
+  "severity": "high",
+  "claim": "The lazy relation-key getter for the Relations v2 adapter now reads db._?.schema instead of db._?.relations, the field the removed pre-PR line used and the field this adapter's own metadata actually lives on (confirmed by the test's `relationMetadata: { relations: {} }` mock for the v2 adapter factory), so it builds the relation-key map from the wrong, typically undefined source and joins silently lose their relation keys.",
+  "evidence": "(relationKeysByModel ??= buildRelationKeysByModel(db._?.schema));"
+ },
+ {
+  "id": "F4",
+  "file": "packages/drizzle-adapter/src/drizzle-adapter.ts",
+  "line": 190,
+  "severity": "medium",
+  "claim": "getRelationKeysByModel uses `??` instead of `??=`, so relationKeysByModel is never assigned and buildRelationKeysByModel(db._?.schema) is recomputed on every call instead of being cached once as the lazy-init refactor intends, unlike the sibling relations-v2 getter which correctly uses `??=`.",
+  "evidence": "relationKeysByModel ?? buildRelationKeysByModel(db._?.schema);"
+ }
+]

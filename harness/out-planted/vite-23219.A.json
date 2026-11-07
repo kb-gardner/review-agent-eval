@@ -1,0 +1,9 @@
+[
+  {
+    "file": "packages/vite/src/node/utils.ts",
+    "line": 513,
+    "severity": "high",
+    "claim": "posToNumber checks the terminator character at the wrong index (the current line's own length rather than the accumulated absolute offset), so for any line at index >= 2 in a CRLF source where the line length differs from the running offset, the terminator is misclassified as 1 char instead of 2, producing a wrong resulting offset.",
+    "evidence": "start += lineTerminatorLengthAt(source, lines[i].length)"
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "file": "packages/vite/src/node/utils.ts",
+    "line": 606,
+    "severity": "medium",
+    "claim": "In the trailing-line branch the change advances `count` past a 2-character CRLF terminator, but the underline length on the next line is still measured as `end - count`, where `count` is the offset of the end of the previous line rather than the start of line j. For CRLF that over-counts by 2 instead of 1, so a range frame underlines one extra character on its last line compared with the identical LF source. With longSource = \"import foo from './foo'\\n\\nfoo()\\n// 1\\n// 2\\n// 3\", generateCodeFrame(crlf, indexOf('foo()'), indexOf('// 2')) emits `^^` under line 5 while the LF equivalent emits `^`; over all 496 start/end pairs on a 10-line source, 169 produce a different frame for CRLF than for LF. The PR's own stated invariant (\"the frame should point to the same location regardless of the line endings\") therefore still fails for ranges, and the newly added snapshot records the wrong `^^`.",
+    "evidence": "          if (end > count) {\n            const length = Math.max(Math.min(end - count, lineLength), 1)\n            const underline = '^'.repeat(Math.min(length, MAX_DISPLAY_LEN))\n            res.push(`${' '.repeat(lineNumberWidth)}|  ` + underline)\n          }\n          count += lineTerminatorLengthAt(source, count) + lineLength",
+    "fix": "Advance `count` past the terminator before the `end > count` check and the `end - count` length computation (i.e. add lineTerminatorLengthAt(source, count) first, so the length is measured from the start of line j), and re-record the `works with CRLF given a range` snapshot."
+  }
+]

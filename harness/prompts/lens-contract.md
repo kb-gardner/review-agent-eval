@@ -1,0 +1,1 @@
+Lens: contracts and compatibility. Concentrate on changed function signatures and return shapes, behavior changes for existing callers, public API and config semantics, type mismatches, and error paths callers depend on.

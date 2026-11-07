@@ -1,0 +1,13 @@
+[
+  {
+    "file": "packages/vite/src/node/utils.ts",
+    "line": 606,
+    "severity": "medium",
+    "claim": "In the trailing-line branch (j > i) the underline length is computed as `end - count` before `count` is advanced past the line terminator, so `count` is still the offset of the end of line j-1 rather than the start of line j. That makes `end - count` equal to (end - startOfLine_j) + terminatorLength, which over-counts by 1 for LF and by 2 for CRLF, so a range frame underlines one extra character on each trailing line of a CRLF source compared with the identical LF source. Re-running the changed code on longSource = \"import foo from './foo'\\n\\nfoo()\\n// 1\\n// 2\\n// 3\": generateCodeFrame(crlf, crlf.indexOf('foo()'), crlf.indexOf('// 2')) emits `^^` under line 5 while the LF equivalent emits `^`, and sweeping every start/end pair over that source (1081 pairs, LF offsets mapped to their CRLF equivalents) gives a different frame in 424 of them. The PR's own stated invariant (\"the frame should point to the same location regardless of the line endings\") therefore still fails for ranges, and the newly added `works with CRLF given a range` snapshot records the wrong `^^`.",
+    "evidence": "          if (end > count) {\n            const length = Math.max(Math.min(end - count, lineLength), 1)\n            const underline = '^'.repeat(Math.min(length, MAX_DISPLAY_LEN))\n            res.push(`${' '.repeat(lineNumberWidth)}|  ` + underline)\n          }\n          count += lineTerminatorLengthAt(source, count) + lineLength",
+    "fix": "Advance `count` past the terminator before the `end > count` check and the `end - count` length computation (i.e. add lineTerminatorLengthAt(source, count) first, so the length is measured from the start of line j), and re-record the `works with CRLF given a range` snapshot.",
+    "verdict": "keep",
+    "reason": "Re-deriving the changed loop reproduces the divergence exactly — the CRLF range frame underlines `^^` on line 5 where LF underlines `^`, matching the snapshot this PR adds — but the reviewer's \"496 pairs / 169 differing\" figure does not reproduce, so the claim keeps the correct mechanism with a sweep I actually ran.",
+    "rewritten": true
+  }
+]

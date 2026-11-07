@@ -1,0 +1,110 @@
+[
+ {
+  "id": "tailwindcss-20379",
+  "repo": "tailwindlabs/tailwindcss",
+  "num": 20379,
+  "sha": "50daebded0a7c0fc529fe2fd5ff138cae7229bde",
+  "lines": 201,
+  "files": 4,
+  "title": "Prevent `@tailwindcss/vite` crash under Vite's experimental `bundledDev`"
+ },
+ {
+  "id": "tailwindcss-20399",
+  "repo": "tailwindlabs/tailwindcss",
+  "num": 20399,
+  "sha": "16e94cbf7f965c5ad697e90e940b5e178efad67c",
+  "lines": 225,
+  "files": 4,
+  "title": "Make `createCompatConfig` theme mappings safe to spread when a namespace returns a string"
+ },
+ {
+  "id": "better-auth-11263",
+  "repo": "better-auth/better-auth",
+  "num": 11263,
+  "sha": "e18bc83172dca1804f0c5c3eff41d65e2849c557",
+  "lines": 113,
+  "files": 4,
+  "title": "fix(drizzle-adapter): defer relation metadata access"
+ },
+ {
+  "id": "vite-23219",
+  "repo": "vitejs/vite",
+  "num": 23219,
+  "sha": "9913672bee9c34a2df7fff4c2538783cd4f43b4e",
+  "lines": 51,
+  "files": 3,
+  "title": "fix: handle CRLF line endings in code frame positions"
+ },
+ {
+  "id": "tailwindcss-20383",
+  "repo": "tailwindlabs/tailwindcss",
+  "num": 20383,
+  "sha": "d190343594dfb2e79e2afe1307cac369746f95f1",
+  "lines": 277,
+  "files": 6,
+  "title": "Use wasm as a fallback for `@tailwindcss/oxide`"
+ },
+ {
+  "id": "jetstream-2072",
+  "repo": "jetstreamapp/jetstream",
+  "num": 2072,
+  "sha": "6cc60fe016af65897a5a5d83ab3cba3d2f011299",
+  "lines": 86,
+  "files": 4,
+  "title": "build: fix dev server port detection on server restart fro mcode change"
+ },
+ {
+  "id": "drizzle-orm-6072",
+  "repo": "drizzle-team/drizzle-orm",
+  "num": 6072,
+  "sha": "2ce46c263a3feb83a546a61b65a887592e1dcc93",
+  "lines": 203,
+  "files": 8,
+  "title": "new issues"
+ },
+ {
+  "id": "jetstream-2045",
+  "repo": "jetstreamapp/jetstream",
+  "num": 2045,
+  "sha": "b98669309b4c5f32015e1a0cdc842393a7cfec10",
+  "lines": 163,
+  "files": 2,
+  "title": "fix: ensure team is auto-created on upgrade"
+ },
+ {
+  "id": "tailwindcss-20397",
+  "repo": "tailwindlabs/tailwindcss",
+  "num": 20397,
+  "sha": "46df7ee2fc4ae822d414d35bbd48be024e5cb1c0",
+  "lines": 223,
+  "files": 4,
+  "title": "Don't scan ignored folders using `.gitignore` safelist setup"
+ },
+ {
+  "id": "express-7377",
+  "repo": "expressjs/express",
+  "num": 7377,
+  "sha": "61ccf2ea8c1bd19cbca6acfb7cd276c5fcd410d3",
+  "lines": 48,
+  "files": 3,
+  "title": "feat: allow conditional revalidation for QUERY requests (v4)"
+ },
+ {
+  "id": "tailwindcss-20380",
+  "repo": "tailwindlabs/tailwindcss",
+  "num": 20380,
+  "sha": "6def8205b5eeba95e697d790efba0d865c0e4b48",
+  "lines": 332,
+  "files": 4,
+  "title": "Canonicalization: convert variants with arbitrary values to equivalent variants"
+ },
+ {
+  "id": "express-7366",
+  "repo": "expressjs/express",
+  "num": 7366,
+  "sha": "ae6dd37680e3a00618d6c8a3e522f0ee4eeba1a4",
+  "lines": 52,
+  "files": 3,
+  "title": "feat: allow conditional revalidation for QUERY requests"
+ }
+]

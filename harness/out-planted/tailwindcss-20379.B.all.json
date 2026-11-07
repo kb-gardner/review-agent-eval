@@ -1,0 +1,20 @@
+[
+ {
+  "file": "packages/@tailwindcss-vite/src/index.ts",
+  "line": 267,
+  "severity": "medium",
+  "claim": "The new guard bails out whenever `server.hot` is falsy, not just when `server` itself is undefined, so it also short-circuits the existing `server.ws.send` fallback path for servers that expose `ws` but not `hot`, changing behavior for those existing callers instead of only handling the bundledDev `server === undefined` case.",
+  "evidence": "if (!server?.hot) return\n...\n} else if (server.ws.send) {\n  server.ws.send({ type: 'full-reload' })\n}",
+  "source_lens": "contract",
+  "id": "B1"
+ },
+ {
+  "file": "packages/@tailwindcss-vite/src/index.ts",
+  "line": 267,
+  "severity": "medium",
+  "claim": "The new guard only checks server?.hot, so when server exists but only exposes .ws (no .hot), hotUpdate now returns before ever reaching the existing server.ws.send fallback below, silently dropping the full-reload notification that fallback was written to send.",
+  "evidence": "if (!server?.hot) return",
+  "source_lens": "correctness",
+  "id": "B2"
+ }
+]

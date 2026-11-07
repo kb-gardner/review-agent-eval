@@ -1,0 +1,1 @@
+Lens: security and input handling. Concentrate on untrusted input reaching sensitive operations, injection, path handling, authentication or authorization changes, unsafe defaults, secrets, and denial of service through unbounded work.

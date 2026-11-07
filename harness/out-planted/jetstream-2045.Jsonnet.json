@@ -1,0 +1,25 @@
+{
+ "labels": [
+  {
+   "id": "F1",
+   "label": "real",
+   "reason": "The new branch creates a team but then calls synchronizeStripeWithJetstreamTeamIfRequired with teamId: userId instead of the newly created team's id, discarding the team object and syncing against the wrong id."
+  },
+  {
+   "id": "F2",
+   "label": "real",
+   "reason": "createTeamForTeamPlanCustomer calls updateCustomerMetadata without await, whereas the prior code awaited it, so a rejection is now unhandled and the function can return before the Stripe metadata update completes."
+  },
+  {
+   "id": "F3",
+   "label": "real",
+   "reason": "Same defect as F1 at the correct source line (468): the self-heal branch passes userId as teamId instead of the newly created team.id, operating on the wrong team."
+  },
+  {
+   "id": "F4",
+   "label": "real",
+   "reason": "Duplicate of F2's correct observation: the updateCustomerMetadata call inside createTeamForTeamPlanCustomer is fired without await, losing error handling and completion ordering that the previous code had."
+  }
+ ],
+ "missed": []
+}

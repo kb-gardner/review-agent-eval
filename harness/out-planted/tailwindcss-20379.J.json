@@ -1,0 +1,28 @@
+{
+  "labels": [
+    {
+      "id": "F1",
+      "label": "not_real",
+      "reason": "The `server.ws.send` fallback was already unreachable when `server.hot` is undefined because the preceding `else if (server.hot.send)` would throw first, so the guard drops no working notification and only replaces a crash with an early return."
+    },
+    {
+      "id": "F2",
+      "label": "not_real",
+      "reason": "Same claim as F1: a server exposing `ws` but not `hot` could never reach the `server.ws.send` branch since `else if (server.hot.send)` dereferences `server.hot` first, so no previously working path is skipped."
+    }
+  ],
+  "missed": [
+    {
+      "file": "packages/@tailwindcss-vite/src/index.ts",
+      "line": 267,
+      "claim": "The bail-out is broader than the bug it fixes: it returns from the whole handler, disabling Tailwind's full-reload path for watched-but-not-module files (HTML/PHP) under `bundledDev`, even though most of that path never touches `server`.",
+      "evidence": "Only the two `Object.values(server.environments)` loops (lines 311, 346) and the `server.hot.send` / `server.ws.send` sends (lines 394-397) need `server`. The invalidation loop and the same-environment reload use `this.environment.moduleGraph.invalidateModule(...)` and `this.environment.hot.send({ type: 'full-reload' })` (lines 383-393), which are available without a server, so a narrower guard could keep the environment-level reload working in `bundledDev`."
+    },
+    {
+      "file": "packages/@tailwindcss-vite/src/index.test.ts",
+      "line": 21,
+      "claim": "The new unit test invokes the hook with `this` bound to the plugin object rather than a Vite plugin context, so it can only ever exercise the single guard line and would keep passing even if everything after it regressed.",
+      "evidence": "`hotUpdate.call(plugin, { file, modules: [], timestamp, server: undefined })` — `plugin` has no `environment`, so any execution past `if (!server?.hot) return` would throw on `this.environment`; the `.not.toThrow()` assertion therefore pins only the early return, not the bundledDev behavior the integration test describes."
+    }
+  ]
+}

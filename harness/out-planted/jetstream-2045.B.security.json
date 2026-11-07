@@ -1,0 +1,16 @@
+[
+  {
+    "file": "apps/api/src/app/services/stripe.service.ts",
+    "line": 468,
+    "severity": "high",
+    "claim": "synchronizeStripeWithJetstreamUserIfRequired hands off to the team sync path using the user's id as teamId instead of the newly created team's id, so the team-scoped entitlement sync operates on the wrong identifier and the just-created team is never correctly synchronized.",
+    "evidence": "return await synchronizeStripeWithJetstreamTeamIfRequired({ teamId: userId, customerId });"
+  },
+  {
+    "file": "apps/api/src/app/services/stripe.service.ts",
+    "line": 116,
+    "severity": "medium",
+    "claim": "createTeamForTeamPlanCustomer calls updateCustomerMetadata without awaiting or handling its result, so a failed write of the authorization-relevant type/teamId metadata is silently dropped instead of surfaced, where the prior code explicitly awaited the equivalent call.",
+    "evidence": "updateCustomerMetadata(customerId, { userId, teamId: team.id, type: 'TEAM' });"
+  }
+]

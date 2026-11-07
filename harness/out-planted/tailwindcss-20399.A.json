@@ -1,0 +1,9 @@
+[
+  {
+    "file": "packages/tailwindcss/src/compat/apply-compat-hooks.ts",
+    "line": 319,
+    "severity": "high",
+    "claim": "The new DEFAULT-unwrapping check for `resolveThemeValue` requires the resolved value to be an array, so it never matches the plain-object namespace values it is meant to handle, meaning `theme('shadow')`-style CSS lookups on a namespace with only a bare `DEFAULT` value fall through and return `undefined` instead of the string.",
+    "evidence": "typeof resolvedValue === 'object' &&\n      resolvedValue !== null &&\n      Array.isArray(resolvedValue) &&\n      'DEFAULT' in resolvedValue"
+  }
+]

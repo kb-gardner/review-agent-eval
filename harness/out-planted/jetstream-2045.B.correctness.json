@@ -1,0 +1,16 @@
+[
+  {
+    "file": "apps/api/src/app/services/stripe.service.ts",
+    "line": 179,
+    "severity": "high",
+    "claim": "synchronizeStripeWithJetstreamUserIfRequired passes the user id as the teamId to synchronizeStripeWithJetstreamTeamIfRequired instead of the newly created team's id, so the sync is run against the wrong team while the just-created team object is discarded.",
+    "evidence": "+      return await synchronizeStripeWithJetstreamTeamIfRequired({ teamId: userId, customerId });"
+  },
+  {
+    "file": "apps/api/src/app/services/stripe.service.ts",
+    "line": 160,
+    "severity": "high",
+    "claim": "createTeamForTeamPlanCustomer no longer awaits updateCustomerMetadata (it was awaited before this refactor), so a rejection is unhandled and the function can return before Stripe's metadata is actually updated.",
+    "evidence": "+  updateCustomerMetadata(customerId, { userId, teamId: team.id, type: 'TEAM' });"
+  }
+]

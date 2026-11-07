@@ -1,0 +1,16 @@
+[
+  {
+    "file": "lib/request.js",
+    "line": 475,
+    "severity": "high",
+    "claim": "The method check for req.fresh drops HEAD entirely while adding QUERY, so HEAD requests that previously could be validated as fresh now always return false, breaking conditional GET behavior for existing HEAD callers.",
+    "evidence": "if ('GET' !== method && 'QUERY' !== method) return false;"
+  },
+  {
+    "file": "test/req.fresh.js",
+    "line": 52,
+    "severity": "medium",
+    "claim": "The skip condition is inverted (negated) compared to the equivalent check in the very next test, so this test runs when QUERY support should be skipped and skips when QUERY is actually supported, the opposite of the intended behavior.",
+    "evidence": "if (!shouldSkipQuery(process.versions.node)) {"
+  }
+]

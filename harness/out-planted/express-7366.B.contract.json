@@ -1,0 +1,9 @@
+[
+  {
+    "file": "lib/request.js",
+    "line": 475,
+    "severity": "high",
+    "claim": "The freshness check now only recognizes GET and QUERY methods, silently dropping HEAD, so existing callers relying on conditional HEAD requests will always get req.fresh === false (and req.stale === true) even when a valid ETag/Last-Modified match would previously have returned 304.",
+    "evidence": "// GET or QUERY for weak freshness validation only\n  if ('GET' !== method && 'QUERY' !== method) return false;"
+  }
+]

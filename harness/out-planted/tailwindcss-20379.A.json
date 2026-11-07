@@ -1,0 +1,9 @@
+[
+  {
+    "file": "packages/@tailwindcss-vite/src/index.ts",
+    "line": 267,
+    "severity": "medium",
+    "claim": "The new guard bails out on `!server?.hot`, but the function's own fallback path a few lines later still uses `server.ws.send` for servers that expose `ws` but not `hot`, so those servers now silently skip the full-reload logic entirely instead of reaching the `server.ws.send` branch.",
+    "evidence": "if (!server?.hot) return\n...\n            if (env === this.environment.name) {\n              this.environment.hot.send({ type: 'full-reload' })\n            } else if (server.hot.send) {\n              server.hot.send({ type: 'full-reload' })\n            } else if (server.ws.send) {\n              server.ws.send({ type: 'full-reload' })\n            }"
+  }
+]

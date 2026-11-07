@@ -1,0 +1,122 @@
+[
+  {
+    "pack": "tailwindcss-20379.md",
+    "id": "tailwindcss-20379-P1",
+    "file": "packages/@tailwindcss-vite/src/index.ts",
+    "line": 267,
+    "kind": "over-broad guard condition",
+    "description": "The new early-return in `hotUpdate` guards on `!server?.hot` instead of `!server`, so it also bails out on dev servers that only expose the legacy `ws` channel, silently dropping the full-page reloads the code below still falls back to through `server.ws.send`.",
+    "original": "        if (!server) return",
+    "planted": "        if (!server?.hot) return"
+  },
+  {
+    "pack": "tailwindcss-20379.md",
+    "id": "tailwindcss-20379-P2",
+    "file": "packages/@tailwindcss-vite/src/index.test.ts",
+    "line": 23,
+    "kind": "vacuous regression test",
+    "description": "The new regression test passes `modules: []`, which makes `isExternalFile` false so the handler returns before `server` is ever dereferenced — the test therefore passes even without the fix and does not actually cover the bundledDev crash.",
+    "original": "      modules: [{ type: 'asset', id: undefined }],",
+    "planted": "      modules: [],"
+  },
+  {
+    "pack": "tailwindcss-20399.md",
+    "id": "tailwindcss-20399-P1",
+    "file": "packages/tailwindcss/src/compat/plugin-functions.ts",
+    "line": 238,
+    "kind": "dropped guard condition",
+    "description": "In `readFromCss` the `Object.keys(obj).length === 1` condition was dropped from the DEFAULT shortcut, so a specific-key lookup on a namespace with more than one entry (e.g. `theme('colors.red')` when both `--color-red` and `--color-red-500` exist) now returns only the DEFAULT value instead of the full object.",
+    "original": "  if (path.length > 1 && 'DEFAULT' in obj && Object.keys(obj).length === 1) {",
+    "planted": "  if (path.length > 1 && 'DEFAULT' in obj) {"
+  },
+  {
+    "pack": "tailwindcss-20399.md",
+    "id": "tailwindcss-20399-P2",
+    "file": "packages/tailwindcss/src/compat/apply-compat-hooks.ts",
+    "line": 319,
+    "kind": "missing negation makes new branch dead code",
+    "description": "In `resolveThemeValue` the relocated DEFAULT-unwrapping block requires `Array.isArray(resolvedValue)` (the `!` is missing), so the branch can never run and CSS `theme('…')` lookups that previously resolved to a namespace's DEFAULT value now resolve to nothing.",
+    "original": "      !Array.isArray(resolvedValue) &&",
+    "planted": "      Array.isArray(resolvedValue) &&"
+  },
+  {
+    "pack": "better-auth-11263.md",
+    "id": "better-auth-11263-P1",
+    "file": "packages/drizzle-adapter/src/relations-v2/index.ts",
+    "line": 280,
+    "kind": "wrong metadata property (copy-paste from v1)",
+    "description": "The Relations v2 adapter's lazy getter builds the relation keys from `db._?.schema` instead of `db._?.relations`, so v2 relation metadata is never read and joined queries lose their relation keys.",
+    "original": "\t\t(relationKeysByModel ??= buildRelationKeysByModel(db._?.relations));",
+    "planted": "\t\t(relationKeysByModel ??= buildRelationKeysByModel(db._?.schema));"
+  },
+  {
+    "pack": "better-auth-11263.md",
+    "id": "better-auth-11263-P2",
+    "file": "packages/drizzle-adapter/src/drizzle-adapter.ts",
+    "line": 190,
+    "kind": "cache never populated (`??` instead of `??=`)",
+    "description": "The v1 adapter's `getRelationKeysByModel` uses `??` instead of `??=`, so `relationKeysByModel` is never assigned and the relation-key map is rebuilt from `db._` on every joined query instead of being memoized once.",
+    "original": "\t\t(relationKeysByModel ??= buildRelationKeysByModel(db._?.schema));",
+    "planted": "\t\trelationKeysByModel ?? buildRelationKeysByModel(db._?.schema);"
+  },
+  {
+    "pack": "vite-23219.md",
+    "id": "vite-23219-P1",
+    "file": "packages/vite/src/node/utils.ts",
+    "line": 606,
+    "kind": "wrong offset passed to the line-terminator probe",
+    "description": "In `generateCodeFrame` the continuation-line branch probes the terminator at `count + lineLength` (a character in the middle of the following line) instead of at `count` (the terminator itself), so multi-line CRLF ranges undercount by one character per line and emit underlines of the wrong length.",
+    "original": "          count += lineTerminatorLengthAt(source, count) + lineLength",
+    "planted": "          count += lineTerminatorLengthAt(source, count + lineLength) + lineLength"
+  },
+  {
+    "pack": "vite-23219.md",
+    "id": "vite-23219-P2",
+    "file": "packages/vite/src/node/utils.ts",
+    "line": 513,
+    "kind": "wrong variable used as index",
+    "description": "In `posToNumber` the terminator length is probed at `lines[i].length` instead of the running `start` offset — identical only for the first line — so from the third line onward in a CRLF source the wrong character is inspected and the returned offset is short by one per CRLF line.",
+    "original": "    start += lineTerminatorLengthAt(source, start)",
+    "planted": "    start += lineTerminatorLengthAt(source, lines[i].length)"
+  },
+  {
+    "pack": "express-7366.md",
+    "id": "express-7366-P1",
+    "file": "lib/request.js",
+    "line": 475,
+    "kind": "dropped an existing supported case (regression)",
+    "description": "While adding QUERY to `req.fresh`, the rewritten guard drops `HEAD`, so HEAD requests no longer get conditional revalidation — a regression against the documented GET/HEAD behavior the PR only meant to extend.",
+    "original": "  if ('GET' !== method && 'HEAD' !== method && 'QUERY' !== method) return false;",
+    "planted": "  if ('GET' !== method && 'QUERY' !== method) return false;"
+  },
+  {
+    "pack": "express-7366.md",
+    "id": "express-7366-P2",
+    "file": "test/req.fresh.js",
+    "line": 52,
+    "kind": "inverted condition in test skip guard",
+    "description": "The first QUERY test's skip guard is inverted (`if (!shouldSkipQuery(...))`), so the test is skipped exactly on the Node versions that support QUERY and only runs on the ones that do not — note the sibling test below keeps the correct, non-inverted guard.",
+    "original": "      if (shouldSkipQuery(process.versions.node)) {",
+    "planted": "      if (!shouldSkipQuery(process.versions.node)) {"
+  },
+  {
+    "pack": "jetstream-2045.md",
+    "id": "jetstream-2045-P1",
+    "file": "apps/api/src/app/services/stripe.service.ts",
+    "line": 116,
+    "kind": "forgotten await (floating promise)",
+    "description": "`createTeamForTeamPlanCustomer` calls `updateCustomerMetadata` without `await`, so the helper can return and the caller continue before Stripe's customer metadata is updated, and any failure surfaces as an unhandled rejection instead of an error.",
+    "original": "  await updateCustomerMetadata(customerId, { userId, teamId: team.id, type: 'TEAM' });",
+    "planted": "  updateCustomerMetadata(customerId, { userId, teamId: team.id, type: 'TEAM' });"
+  },
+  {
+    "pack": "jetstream-2045.md",
+    "id": "jetstream-2045-P2",
+    "file": "apps/api/src/app/services/stripe.service.ts",
+    "line": 468,
+    "kind": "wrong variable of a similar name",
+    "description": "The new team-upgrade path in `synchronizeStripeWithJetstreamUserIfRequired` passes `teamId: userId` instead of `teamId: team.id`, so the just-created team's id is never used (leaving `team` unused) and the team sync runs against a user id.",
+    "original": "      return await synchronizeStripeWithJetstreamTeamIfRequired({ teamId: team.id, customerId });",
+    "planted": "      return await synchronizeStripeWithJetstreamTeamIfRequired({ teamId: userId, customerId });"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "labels": [
+    {
+      "id": "F1",
+      "label": "real",
+      "reason": "The getter uses `??` with no assignment back to relationKeysByModel, so the map is rebuilt on every joined query instead of being cached once, unlike the sibling v2 getter that uses `??=`."
+    },
+    {
+      "id": "F2",
+      "label": "real",
+      "reason": "The relations-v2 getter replaced `db._?.relations` (the removed line, and where v2 metadata lives per the test's `{ relations: {} }` mock) with `db._?.schema`, so relation keys are built from absent metadata and joins lose their relation keys."
+    },
+    {
+      "id": "F3",
+      "label": "real",
+      "reason": "Same defect as F2 and equally correct: the v2 lazy getter reads `db._?.schema` where the pre-PR code read `db._?.relations`, silently producing an empty relation-key map."
+    },
+    {
+      "id": "F4",
+      "label": "real",
+      "reason": "Same defect as F1 and equally correct: `??` instead of `??=` leaves relationKeysByModel permanently undefined, defeating the intended one-time memoization."
+    }
+  ],
+  "missed": []
+}

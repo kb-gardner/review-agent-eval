@@ -1,0 +1,10 @@
+{
+  "labels": [
+    {
+      "id": "F1",
+      "label": "real",
+      "reason": "Verified by running the patched algorithm: for a multi-line range, `end - count` measures from the previous line's content end rather than the current line's start, so CRLF sources get one extra caret on trailing lines (e.g. '^^' vs '^' on '// 2'), and the PR's own new snapshot bakes that LF/CRLF divergence in despite the PR's stated parity goal."
+    }
+  ],
+  "missed": []
+}

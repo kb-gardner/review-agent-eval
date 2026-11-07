@@ -1,0 +1,44 @@
+{
+  "labels": [
+    {
+      "id": "F1",
+      "label": "real",
+      "reason": "The added branch creates a team but then calls synchronizeStripeWithJetstreamTeamIfRequired({ teamId: userId }), passing the user id where the new team.id belongs, and the returned team is never used."
+    },
+    {
+      "id": "F2",
+      "label": "real",
+      "reason": "createTeamForTeamPlanCustomer calls updateCustomerMetadata without await while the code it replaced in saveOrUpdateSubscription did await it, leaving a floating promise whose rejection is unhandled and whose completion is not guaranteed before the team is returned."
+    },
+    {
+      "id": "F3",
+      "label": "real",
+      "reason": "Same defect as the added return line shows: teamId is set to userId rather than the id of the team just created, so the team sync runs against a non-existent/wrong team."
+    },
+    {
+      "id": "F4",
+      "label": "real",
+      "reason": "Correct: the awaited updateCustomerMetadata call was replaced by an unawaited one inside createTeamForTeamPlanCustomer, so failures are silent and ordering is not guaranteed."
+    }
+  ],
+  "missed": [
+    {
+      "file": "apps/api/src/app/services/stripe.service.ts",
+      "line": 465,
+      "claim": "The new self-heal branch runs unconditionally whenever a TEAM price is present, with no check for an already-existing team, so every call to synchronizeStripeWithJetstreamUserIfRequired (e.g. each billing page load) re-runs upsertTeamWithBillingAccount and rewrites the Stripe customer metadata.",
+      "evidence": "+    if (findTeamPlanSubscription(subscriptions)) {\n+      const team = await createTeamForTeamPlanCustomer({ userId, customerId });\n+      return await synchronizeStripeWithJetstreamTeamIfRequired(...)  -- placed before the 'do we need to synchronize' checks, with no teamId/existing-team guard."
+    },
+    {
+      "file": "apps/api/src/app/services/__tests__/stripe.service.team-upgrade.spec.ts",
+      "line": 100,
+      "claim": "The new sync test cannot catch the wrong-teamId defect: team.db findById is mocked as vi.fn(async () => ({ id: 'team_new' })) so it resolves for any id, and the test only asserts result.success and that the personal update was not called, giving false confidence in the self-heal path.",
+      "evidence": "vi.mock('../../db/team.db', () => ({ ... findById: vi.fn(async () => ({ id: 'team_new' })), ... }));  plus  expect(result.success).toBe(true);"
+    },
+    {
+      "file": "apps/api/src/app/services/stripe.service.ts",
+      "line": 588,
+      "claim": "In saveOrUpdateSubscription, hasTeamPlan is computed from the raw customer.subscriptions data without filterInactiveSubscriptions, so a canceled/incomplete TEAM subscription still auto-creates a team and flips the Stripe customer type to TEAM; the new sync-path branch filters first, so the two paths now disagree.",
+      "evidence": "const subscriptions = customer.subscriptions?.data ?? [];\n+  const hasTeamPlan = !!findTeamPlanSubscription(subscriptions);   vs.   const subscriptions = filterInactiveSubscriptions(stripeCustomer.subscriptions.data); ... if (findTeamPlanSubscription(subscriptions))"
+    }
+  ]
+}

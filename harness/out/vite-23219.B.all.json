@@ -1,0 +1,11 @@
+[
+ {
+  "file": "packages/vite/src/node/utils.ts",
+  "line": 504,
+  "severity": "medium",
+  "claim": "When a highlighted range's end extends past the found start line, generateCodeFrame computes how many characters of a later line to underline as `end - count`, but `count` at that point marks the boundary just before the previous line's terminator, not the start of the current line's content; for CRLF sources this leaks the 2-byte terminator into the underline count, so an `end` that lands exactly at the start of a following line produces a spurious extra caret on that line where the equivalent LF source produces one fewer (verified by running the algorithm: for longSourceCrLf with end at the start of the '// 2' line, the underline is '^^' on '// 2', while the identical logical position on the LF longSource produces only '^' \u2014 contradicting the fix's own stated goal that the frame should point to the same location regardless of line endings).",
+  "evidence": "if (end > count) {\n  const length = Math.max(Math.min(end - count, lineLength), 1)\n  const underline = '^'.repeat(Math.min(length, MAX_DISPLAY_LEN))\n  res.push(`${' '.repeat(lineNumberWidth)}|  ` + underline)\n}\ncount += lineTerminatorLengthAt(source, count) + lineLength",
+  "source_lens": "contract",
+  "id": "B1"
+ }
+]

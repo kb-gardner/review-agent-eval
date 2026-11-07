@@ -1,0 +1,9 @@
+[
+  {
+    "file": "packages/tailwindcss/src/compat/apply-compat-hooks.ts",
+    "line": 319,
+    "severity": "high",
+    "claim": "The new DEFAULT-unwrap check requires resolvedValue to be an array, so it can never fire for the plain-object namespace-root case (e.g. `{ DEFAULT: '1rem' }`) it was added to handle; CSS `theme('text')` lookups for a namespace with only a bare value now fall through every branch and return `undefined` instead of the string value, since the equivalent unguarded array check that used to make this safe as an else-if has been removed.",
+    "evidence": "typeof resolvedValue === 'object' &&\n      resolvedValue !== null &&\n      Array.isArray(resolvedValue) &&\n      'DEFAULT' in resolvedValue\n    ) {\n      resolvedValue = resolvedValue.DEFAULT\n    }"
+  }
+]

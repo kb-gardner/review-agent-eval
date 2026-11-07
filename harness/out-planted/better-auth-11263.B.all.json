@@ -1,0 +1,38 @@
+[
+ {
+  "file": "packages/drizzle-adapter/src/relations-v2/index.ts",
+  "line": 280,
+  "severity": "high",
+  "claim": "The lazy relation-key getter for the Relations v2 adapter now reads db._?.schema instead of the db._?.relations it read before the change, so it builds relation keys from the wrong metadata field for callers using the v2 relations API.",
+  "evidence": "(relationKeysByModel ??= buildRelationKeysByModel(db._?.schema));",
+  "source_lens": "contract",
+  "id": "B1"
+ },
+ {
+  "file": "packages/drizzle-adapter/src/drizzle-adapter.ts",
+  "line": 190,
+  "severity": "medium",
+  "claim": "getRelationKeysByModel uses ?? instead of ??=, so relationKeysByModel is never assigned and buildRelationKeysByModel(db._?.schema) is recomputed on every call instead of being cached once as the lazy-init refactor intends.",
+  "evidence": "relationKeysByModel ?? buildRelationKeysByModel(db._?.schema);",
+  "source_lens": "contract",
+  "id": "B2"
+ },
+ {
+  "file": "packages/drizzle-adapter/src/relations-v2/index.ts",
+  "line": 187,
+  "severity": "high",
+  "claim": "The lazy relation-key getter for the Relations v2 adapter reads db._?.schema instead of db._?.relations (the field the removed line used and the field this adapter's own metadata actually lives on), so it builds the relation-key map from the wrong (typically undefined) source and joins silently lose their relation keys.",
+  "evidence": "(relationKeysByModel ??= buildRelationKeysByModel(db._?.schema));",
+  "source_lens": "correctness",
+  "id": "B3"
+ },
+ {
+  "file": "packages/drizzle-adapter/src/drizzle-adapter.ts",
+  "line": 146,
+  "severity": "medium",
+  "claim": "relationKeysByModel is only read with ?? and never assigned (unlike the sibling relations-v2 getter, which uses ??=), so the intended memoization never happens and buildRelationKeysByModel(db._?.schema) is rebuilt from scratch on every call to getRelationKeysByModel() instead of once.",
+  "evidence": "relationKeysByModel ?? buildRelationKeysByModel(db._?.schema);",
+  "source_lens": "correctness",
+  "id": "B4"
+ }
+]

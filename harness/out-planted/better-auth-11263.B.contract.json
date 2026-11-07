@@ -1,0 +1,16 @@
+[
+  {
+    "file": "packages/drizzle-adapter/src/relations-v2/index.ts",
+    "line": 280,
+    "severity": "high",
+    "claim": "The lazy relation-key getter for the Relations v2 adapter now reads db._?.schema instead of the db._?.relations it read before the change, so it builds relation keys from the wrong metadata field for callers using the v2 relations API.",
+    "evidence": "(relationKeysByModel ??= buildRelationKeysByModel(db._?.schema));"
+  },
+  {
+    "file": "packages/drizzle-adapter/src/drizzle-adapter.ts",
+    "line": 190,
+    "severity": "medium",
+    "claim": "getRelationKeysByModel uses ?? instead of ??=, so relationKeysByModel is never assigned and buildRelationKeysByModel(db._?.schema) is recomputed on every call instead of being cached once as the lazy-init refactor intends.",
+    "evidence": "relationKeysByModel ?? buildRelationKeysByModel(db._?.schema);"
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "file": "packages/drizzle-adapter/src/relations-v2/index.ts",
+    "line": 280,
+    "severity": "high",
+    "claim": "The lazy relation-keys getter reads db._?.schema instead of db._?.relations (what the removed line and the module's own v2 tests expect), so relation keys are built from the wrong/absent metadata and joins break for the relations-v2 adapter.",
+    "evidence": "(relationKeysByModel ??= buildRelationKeysByModel(db._?.schema));"
+  },
+  {
+    "file": "packages/drizzle-adapter/src/drizzle-adapter.ts",
+    "line": 190,
+    "severity": "medium",
+    "claim": "getRelationKeysByModel never assigns the computed value back to relationKeysByModel, so it is never memoized and buildRelationKeysByModel(db._?.schema) is recomputed on every joined query instead of once.",
+    "evidence": "relationKeysByModel ?? buildRelationKeysByModel(db._?.schema);"
+  }
+]

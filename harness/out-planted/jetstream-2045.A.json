@@ -1,0 +1,16 @@
+[
+  {
+    "file": "apps/api/src/app/services/stripe.service.ts",
+    "line": 468,
+    "severity": "high",
+    "claim": "The self-heal branch creates the team but then syncs using the user's id as the teamId instead of the newly created team's id, so it operates on the wrong team.",
+    "evidence": "return await synchronizeStripeWithJetstreamTeamIfRequired({ teamId: userId, customerId });"
+  },
+  {
+    "file": "apps/api/src/app/services/stripe.service.ts",
+    "line": 116,
+    "severity": "medium",
+    "claim": "updateCustomerMetadata is no longer awaited (it was awaited before this refactor), so a rejected call becomes an unhandled promise rejection and callers can proceed before the Stripe metadata update actually completes.",
+    "evidence": "updateCustomerMetadata(customerId, { userId, teamId: team.id, type: 'TEAM' });"
+  }
+]

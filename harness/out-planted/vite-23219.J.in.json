@@ -1,0 +1,18 @@
+[
+ {
+  "id": "F1",
+  "file": "packages/vite/src/node/utils.ts",
+  "line": 513,
+  "severity": "high",
+  "claim": "posToNumber checks the terminator character at the wrong index (the current line's own length rather than the accumulated absolute offset), so for any line at index >= 2 in a CRLF source where the line length differs from the running offset, the terminator is misclassified as 1 char instead of 2, producing a wrong resulting offset.",
+  "evidence": "start += lineTerminatorLengthAt(source, lines[i].length)"
+ },
+ {
+  "id": "F2",
+  "file": "packages/vite/src/node/utils.ts",
+  "line": 513,
+  "severity": "high",
+  "claim": "posToNumber passes the current line's own length (lines[i].length) as the source index to lineTerminatorLengthAt instead of the cumulative offset (start), so for line >= 3 with CRLF input the terminator length is checked at the wrong character and the returned offset is wrong (e.g. posToNumber('a\\r\\nbb\\r\\nc', {line:3, column:0}) yields 6 instead of the correct 7), defeating the CRLF fix for any multi-line file beyond the second line.",
+  "evidence": "start += lines[i].length\n    start += lineTerminatorLengthAt(source, lines[i].length)"
+ }
+]

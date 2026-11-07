@@ -1,0 +1,9 @@
+[
+  {
+    "file": "packages/@tailwindcss-vite/src/index.ts",
+    "line": 267,
+    "severity": "medium",
+    "claim": "The new guard only checks server?.hot, so when server exists but only exposes .ws (no .hot), hotUpdate now returns before ever reaching the existing server.ws.send fallback below, silently dropping the full-reload notification that fallback was written to send.",
+    "evidence": "if (!server?.hot) return"
+  }
+]

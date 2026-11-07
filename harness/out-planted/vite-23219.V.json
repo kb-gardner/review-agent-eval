@@ -1,0 +1,14 @@
+[
+ {
+  "file": "packages/vite/src/node/utils.ts",
+  "line": 513,
+  "severity": "high",
+  "claim": "posToNumber passes the current line's own length (lines[i].length) as the source index to lineTerminatorLengthAt instead of the cumulative offset (start), so for line >= 3 with CRLF input the terminator length is checked at the wrong character and the returned offset is wrong (e.g. posToNumber('a\\r\\nbb\\r\\nc', {line:3, column:0}) yields 6 instead of the correct 7), defeating the CRLF fix for any multi-line file beyond the second line.",
+  "evidence": "start += lines[i].length\n    start += lineTerminatorLengthAt(source, lines[i].length)",
+  "source_lens": "correctness",
+  "id": "B2",
+  "verdict": "keep",
+  "reason": "Traced posToNumber('a\\r\\nbb\\r\\nc', {line:3, column:0}) against the pack's code: lineTerminatorLengthAt is called with lines[i].length (a per-line length) instead of the accumulated source offset, so it checks the wrong character and the function returns 6 instead of the correct 7, confirming the defect for line index i>=1.",
+  "merged_from": 2
+ }
+]

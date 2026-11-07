@@ -1,0 +1,22 @@
+{
+  "labels": [
+    {
+      "id": "F1",
+      "label": "real",
+      "reason": "The added guard ANDs `Array.isArray(resolvedValue)` with `'DEFAULT' in resolvedValue`, which is never true for the plain `{ DEFAULT: … }` objects that readFromCss now returns for root lookups, so the branch is dead and CSS `theme('shadow')` falls through to `undefined` where the deleted branch used to return the DEFAULT string."
+    },
+    {
+      "id": "F2",
+      "label": "real",
+      "reason": "Same defect: the `Array.isArray` conjunct makes the new DEFAULT-unwrap branch unreachable for plain namespace objects, regressing CSS `theme()` root lookups to `undefined`; the condition should be `!Array.isArray(resolvedValue)`."
+    }
+  ],
+  "missed": [
+    {
+      "file": "packages/tailwindcss/src/compat/plugin-functions.ts",
+      "line": 238,
+      "claim": "The rewritten guard drops the `Object.keys(obj).length === 1` requirement, so a specific-key lookup whose key also has sub-keys now collapses to the bare DEFAULT string instead of the full `{ DEFAULT, …siblings, __CSS_VALUES__ }` object.",
+      "evidence": "Old: `if ('DEFAULT' in obj && Object.keys(obj).length === 1)`; new: `if (path.length > 1 && 'DEFAULT' in obj)`. With `--color-red` and `--color-red-500` both defined, `theme('colors.red')` previously returned an object carrying `500` and `__CSS_VALUES__`; it now returns `'red'`, dropping the sibling key and feeding a string into the config-merge path in createThemeFn (which iterates `for (let key in cssValue)` and would char-index a string)."
+    }
+  ]
+}

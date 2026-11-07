@@ -1,0 +1,22 @@
+{
+  "labels": [
+    {
+      "id": "F1",
+      "label": "real",
+      "reason": "Confirmed by running the code: posToNumber passes lines[i].length instead of the running offset start, so from the second loop iteration on it probes the wrong character and CRLF terminators are counted as 1, e.g. posToNumber('a\\r\\nbb\\r\\nc', {line:3,column:0}) returns 6 instead of 7."
+    },
+    {
+      "id": "F2",
+      "label": "real",
+      "reason": "Same defect as observed in F1 and its worked example reproduces exactly: the index argument should be the accumulated start, and the added 'crlf' test only covers line 2, the single case where lines[0].length and start coincide, so the bug is untested."
+    }
+  ],
+  "missed": [
+    {
+      "file": "packages/vite/src/node/utils.ts",
+      "line": 606,
+      "claim": "In generateCodeFrame the multi-line underline advance probes the terminator at the wrong index too: at that point count is the end offset of the previous line, which is exactly where that line's terminator sits, but the code looks at count + lineLength, a position inside the current line. With CRLF the probe returns 1 instead of 2, so count lags the true offset by one character per line and every underline after the first is one caret too long, with the error accumulating.",
+      "evidence": "count += lineTerminatorLengthAt(source, count + lineLength) + lineLength; running the diff's own range case, generateCodeFrame(longSourceCrLf, indexOf('foo()'), indexOf('// 2')) underlines line 5 with '^^^' (the snapshot added in this PR), while the identical LF source underlines it with '^' and the same code using lineTerminatorLengthAt(source, count) gives '^^'; over a 9 line CRLF range the final line is underlined in full ('^^^^^^^^^') where LF gives '^'. This contradicts the PR's own stated goal that the frame point to the same location regardless of line endings."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[
+  {
+    "file": "packages/vite/src/node/utils.ts",
+    "line": 513,
+    "severity": "high",
+    "claim": "posToNumber passes the line's own length (lines[i].length) as the source index to lineTerminatorLengthAt instead of the accumulated offset (start), so for any line index i >= 1 the terminator-length check reads the wrong character in source, corrupting the returned offset for Pos inputs on line 3+ whenever an earlier line used CRLF.",
+    "evidence": "start += lineTerminatorLengthAt(source, lines[i].length)"
+  }
+]

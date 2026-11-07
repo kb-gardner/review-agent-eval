@@ -1,0 +1,34 @@
+[
+ {
+  "id": "F1",
+  "file": "test/req.fresh.js",
+  "line": 52,
+  "severity": "medium",
+  "claim": "The skip condition is inverted (negated) compared to the equivalent check in the very next test, so this test runs when QUERY support should be skipped and skips when QUERY is actually supported, the opposite of the intended behavior.",
+  "evidence": "if (!shouldSkipQuery(process.versions.node)) {"
+ },
+ {
+  "id": "F2",
+  "file": "lib/request.js",
+  "line": 475,
+  "severity": "high",
+  "claim": "The freshness check now only recognizes GET and QUERY methods, silently dropping HEAD, so existing callers relying on conditional HEAD requests will always get req.fresh === false (and req.stale === true) even when a valid ETag/Last-Modified match would previously have returned 304.",
+  "evidence": "// GET or QUERY for weak freshness validation only\n  if ('GET' !== method && 'QUERY' !== method) return false;"
+ },
+ {
+  "id": "F3",
+  "file": "test/req.fresh.js",
+  "line": 52,
+  "severity": "medium",
+  "claim": "The skip condition is inverted relative to the sibling test below it: this test only runs when shouldSkipQuery returns true (QUERY unsupported), instead of skipping in that case, so it does not exercise the new behavior on environments that actually support QUERY.",
+  "evidence": "if (!shouldSkipQuery(process.versions.node)) {\n        this.skip()\n      }"
+ },
+ {
+  "id": "F4",
+  "file": "lib/request.js",
+  "line": 475,
+  "severity": "high",
+  "claim": "The freshness check now drops HEAD from the allowed methods, so HEAD requests that previously supported conditional revalidation (304) now always return false/stale, breaking existing callers.",
+  "evidence": "if ('GET' !== method && 'QUERY' !== method) return false;"
+ }
+]

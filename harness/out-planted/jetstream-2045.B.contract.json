@@ -1,0 +1,16 @@
+[
+  {
+    "file": "apps/api/src/app/services/stripe.service.ts",
+    "line": 468,
+    "severity": "high",
+    "claim": "The new team plan self-heal branch syncs using the customer's userId as the teamId instead of the newly created team's id, so the team sync runs against the wrong entity.",
+    "evidence": "const team = await createTeamForTeamPlanCustomer({ userId, customerId });\n      return await synchronizeStripeWithJetstreamTeamIfRequired({ teamId: userId, customerId });"
+  },
+  {
+    "file": "apps/api/src/app/services/stripe.service.ts",
+    "line": 116,
+    "severity": "high",
+    "claim": "createTeamForTeamPlanCustomer no longer awaits updateCustomerMetadata (both callers previously awaited this call directly), so the function can return, and callers can proceed, before Stripe metadata is actually updated, and any rejection goes unhandled.",
+    "evidence": "updateCustomerMetadata(customerId, { userId, teamId: team.id, type: 'TEAM' });"
+  }
+]

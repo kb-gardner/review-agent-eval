@@ -1,0 +1,16 @@
+[
+  {
+    "file": "lib/request.js",
+    "line": 475,
+    "severity": "high",
+    "claim": "The freshness check now drops HEAD from the allowed methods, so HEAD requests that previously supported conditional revalidation (304) now always return false/stale, breaking existing callers.",
+    "evidence": "if ('GET' !== method && 'QUERY' !== method) return false;"
+  },
+  {
+    "file": "test/req.fresh.js",
+    "line": 52,
+    "severity": "medium",
+    "claim": "The skip condition is inverted relative to the sibling test below it: this test only runs when shouldSkipQuery returns true (QUERY unsupported), instead of skipping in that case, so it does not exercise the new behavior on environments that actually support QUERY.",
+    "evidence": "if (!shouldSkipQuery(process.versions.node)) {\n        this.skip()\n      }"
+  }
+]

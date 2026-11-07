@@ -1,0 +1,15 @@
+{
+ "labels": [
+  {
+   "id": "F1",
+   "label": "not_real",
+   "reason": "In the Environment-API `hotUpdate` hook this plugin targets, `server.hot` is a required, always-present channel object whenever `server` itself is defined, so `!server?.hot` fires only in exactly the bundledDev case (`server === undefined`) the PR is fixing; the later `server.ws.send` fallback is guarded by whether `.send` exists on that channel, not by whether `.hot` itself exists, so it is unaffected by the new check."
+  },
+  {
+   "id": "F2",
+   "label": "not_real",
+   "reason": "Same claim as F1: it assumes `server.hot` can be falsy while `server` is a real, defined dev server, but for the Environment API this hook requires, `.hot` is always present alongside `.ws` on a real server, so the new guard only short-circuits the bundledDev `server === undefined` case and does not remove any reachable `server.ws.send` path."
+  }
+ ],
+ "missed": []
+}

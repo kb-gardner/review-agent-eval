@@ -1,0 +1,38 @@
+{
+  "labels": [
+    {
+      "id": "F1",
+      "label": "real",
+      "reason": "The guard at line 52 is `if (!shouldSkipQuery(...)) this.skip()`, the inverse of the sibling test at line 71, so the new 304 test skips exactly on runtimes that support QUERY and runs where it cannot pass."
+    },
+    {
+      "id": "F2",
+      "label": "real",
+      "reason": "Line 475 replaced the HEAD branch with QUERY instead of adding it, so conditional HEAD requests now always report req.fresh === false, a silent regression for existing callers."
+    },
+    {
+      "id": "F3",
+      "label": "real",
+      "reason": "Same genuine defect as F1: the negated skip guard means the QUERY-fresh test never exercises the new behavior on environments that actually support QUERY."
+    },
+    {
+      "id": "F4",
+      "label": "real",
+      "reason": "Same genuine defect as F2: dropping 'HEAD' from the method check breaks 304 revalidation for HEAD requests that previously worked."
+    }
+  ],
+  "missed": [
+    {
+      "file": "History.md",
+      "line": 12,
+      "claim": "The changelog entry misdescribes the change: it says req.fresh previously validated GET and HEAD and that QUERY 'is now included', implying an additive change, but the code replaced HEAD with QUERY, so the documented behavior contradicts the implementation and hides a breaking change from users.",
+      "evidence": "History.md line 12: \"`req.fresh` previously only validated freshness for GET and HEAD requests ... it is now included in the freshness check\" versus lib/request.js line 475: `if ('GET' !== method && 'QUERY' !== method) return false;`"
+    },
+    {
+      "file": "test/req.fresh.js",
+      "line": 51,
+      "claim": "No test covers HEAD freshness, so the removal of HEAD from the method check passes CI unnoticed; the suite has GET and QUERY cases only.",
+      "evidence": "test/req.fresh.js lines 9-105 contain only .get('/') and .query('/') requests; no .head('/') case exists to catch the dropped HEAD branch at lib/request.js line 475."
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Lens: correctness. Concentrate on logic errors, off-by-one and boundary cases, wrong conditions, state that is read before it is set, async ordering, and cases the change claims to handle but does not.

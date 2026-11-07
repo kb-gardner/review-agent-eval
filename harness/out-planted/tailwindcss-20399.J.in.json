@@ -1,0 +1,18 @@
+[
+ {
+  "id": "F1",
+  "file": "packages/tailwindcss/src/compat/apply-compat-hooks.ts",
+  "line": 319,
+  "severity": "high",
+  "claim": "The new DEFAULT-unwrapping branch requires resolvedValue to be an Array, so it can never fire for the plain-object namespace-root case its own comment describes, meaning theme('shadow')-style CSS lookups against a namespace that only defines a bare value now fall through every remaining branch and return undefined instead of the DEFAULT string that the removed branch used to return.",
+  "evidence": "if (\n  typeof resolvedValue === 'object' &&\n  resolvedValue !== null &&\n  Array.isArray(resolvedValue) &&\n  'DEFAULT' in resolvedValue\n) {\n  resolvedValue = resolvedValue.DEFAULT\n}"
+ },
+ {
+  "id": "F2",
+  "file": "packages/tailwindcss/src/compat/apply-compat-hooks.ts",
+  "line": 319,
+  "severity": "high",
+  "claim": "The new DEFAULT-unwrapping check for `resolveThemeValue` requires the resolved value to be an array, so it never matches the plain-object namespace values it is meant to handle, meaning `theme('shadow')`-style CSS lookups on a namespace with only a bare `DEFAULT` value fall through and return `undefined` instead of the string.",
+  "evidence": "typeof resolvedValue === 'object' &&\n      resolvedValue !== null &&\n      Array.isArray(resolvedValue) &&\n      'DEFAULT' in resolvedValue"
+ }
+]

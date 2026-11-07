@@ -1,0 +1,26 @@
+[
+ {
+  "file": "apps/api/src/app/services/stripe.service.ts",
+  "line": 179,
+  "severity": "high",
+  "claim": "synchronizeStripeWithJetstreamUserIfRequired passes the user id as the teamId to synchronizeStripeWithJetstreamTeamIfRequired instead of the newly created team's id, so the sync is run against the wrong team while the just-created team object is discarded.",
+  "evidence": "+      return await synchronizeStripeWithJetstreamTeamIfRequired({ teamId: userId, customerId });",
+  "source_lens": "correctness",
+  "id": "B3",
+  "verdict": "keep",
+  "reason": "Confirmed in the pack: the self-heal branch creates `team` via createTeamForTeamPlanCustomer but then calls synchronizeStripeWithJetstreamTeamIfRequired with teamId: userId instead of team.id, so the team object is discarded and the sync targets the wrong identifier.",
+  "merged_from": 3
+ },
+ {
+  "file": "apps/api/src/app/services/stripe.service.ts",
+  "line": 116,
+  "severity": "high",
+  "claim": "createTeamForTeamPlanCustomer no longer awaits updateCustomerMetadata (it was awaited before this refactor), so a rejection is unhandled and the function can return before Stripe's metadata is actually updated.",
+  "evidence": "+  updateCustomerMetadata(customerId, { userId, teamId: team.id, type: 'TEAM' });",
+  "source_lens": "correctness",
+  "id": "B4",
+  "verdict": "keep",
+  "reason": "Confirmed in the pack: createTeamForTeamPlanCustomer calls updateCustomerMetadata with no `await`, while the prior code it replaced inside saveOrUpdateSubscription explicitly awaited the equivalent call, so a rejection now goes unhandled and callers can proceed before the write completes.",
+  "merged_from": 3
+ }
+]
